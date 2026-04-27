@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Habitus Fashion Ltd - Dual Gate Pass (Component at Top)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <div class="header">
+            <h1>🧾 HABITUS FASHION LTD</h1>
+        </div>
+
+        <div class="upload-area">
+            <input type="file" id="csvFile" accept=".csv" style="display: none;">
+            <button class="btn btn-primary" id="uploadBtn">📂 Upload CSV File</button>
+            <button class="btn btn-print" id="printBtn" style="display: none;">🖨️ Print Both Copies</button>
+        </div>
+        <div class="info" id="infoMsg">Upload CSV → Select timestamps → Component appears in "Send to:" line. Editable remarks. Two identical challans.</div>
+
+        <div id="timestampSection" class="timestamp-section">
+            <div class="timestamp-header">
+                <h3 style="font-size:0.9rem;">⏱️ Select Timestamps</h3>
+                <div>
+                    <button class="btn" id="selectAllTimesBtn" style="font-size:0.7rem; padding:3px 10px;">✓ All</button>
+                    <button class="btn" id="deselectAllTimesBtn" style="font-size:0.7rem; padding:3px 10px;">✗ None</button>
+                </div>
+            </div>
+            <div id="timestampCheckboxList" class="checkbox-group"></div>
+        </div>
+
+        <div id="dualChallanContainer" style="display: none;"></div>
+        <div id="loadingMsg" style="display: none;" class="loading">Processing...</div>
+        <div id="errorMsg" style="display: none;" class="error"></div>
+    </div>
+</div>
+<script src="main.js"></script>
+</body>
+</html>

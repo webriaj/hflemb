@@ -1,0 +1,220 @@
+
+* {
+    box-sizing: border-box;
+}
+body {
+    background: #eef2f7;
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 20px 12px;
+    color: #1e2a3e;
+}
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+}
+.card {
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    padding: 1.2rem;
+}
+.header {
+    text-align: center;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 10px;
+}
+.header h1 {
+    font-size: 1.4rem;
+    margin: 0;
+    color: #1e4a6e;
+}
+.upload-area {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin: 15px 0 15px;
+}
+.btn {
+    border: none;
+    background: white;
+    border: 1px solid #cbd5e1;
+    padding: 8px 20px;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 0.85rem;
+}
+.btn-primary {
+    background: #1e4a6e;
+    border-color: #1e4a6e;
+    color: white;
+}
+.btn-primary:hover {
+    background: #0f3a56;
+}
+.btn-print {
+    background: #2b6e4e;
+    border-color: #2b6e4e;
+    color: white;
+}
+.timestamp-section {
+    background: #f9fbfd;
+    border-radius: 20px;
+    padding: 10px 16px;
+    margin: 12px 0 16px;
+    border: 1px solid #dee6ef;
+    display: none;
+}
+.timestamp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: white;
+    padding: 4px 12px;
+    border-radius: 40px;
+    border: 1px solid #cbd5e6;
+    font-size: 0.8rem;
+}
+.info {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #4a627a;
+    margin-top: 5px;
+}
+.challan-wrapper {
+    margin-top: 16px;
+    overflow-x: auto;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    background: white;
+    padding: 2px;
+}
+.challan-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.7rem;
+    min-width: 700px;
+}
+.challan-table th,
+.challan-table td {
+    border: 1px solid #9aa9bb;
+    padding: 6px 4px;
+    vertical-align: middle;
+    text-align: center;
+}
+.challan-table th {
+    background: #e6edf6;
+    font-weight: 700;
+    color: #1a3c5c;
+    white-space: nowrap;
+}
+.size-header-main {
+    background: #dce5f0;
+    font-size: 0.8rem;
+}
+.merged-cell {
+    background-color: #fef7e0;
+}
+.total-row {
+    background: #eef3fa;
+    font-weight: 700;
+}
+.signature-section {
+    margin-top: 70px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-size: 0.7rem;
+    border-top: 1px dashed #aaa;
+    padding-top: 15px;
+}
+.signature-line {
+    text-align: center;
+    min-width: 100px;
+}
+.remarks-input {
+    width: 120px;
+    font-size: 0.65rem;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 3px 5px;
+    background: #fffcf0;
+}
+.copy-separator {
+    margin: 30px 0 15px;
+    text-align: center;
+    border-top: 1px dotted #cbd5e1;
+}
+.send-to-line {
+    font-size: 0.8rem;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    font-weight: 500;
+    background: #fef4e8;
+    display: inline-block;
+    padding: 3px 16px;
+    border-radius: 30px;
+}
+/* Print adjustments: narrow margins, smaller headers */
+@media print {
+    body {
+        background: white;
+        margin: 0.2in;
+        padding: 0;
+    }
+    .upload-area, .timestamp-section, .btn, .info, .print-hide, .remarks-input {
+        display: none !important;
+    }
+    .challan-wrapper {
+        border: none;
+        padding: 0;
+    }
+    .challan-table th, .challan-table td {
+        border: 1px solid #000 !important;
+    }
+    .copy-separator {
+        margin: 0.2in 0;
+        border-top: 1px dotted #000;
+    }
+    .header h1 {
+        font-size: 1.2rem;
+    }
+    .header p {
+        font-size: 0.7rem;
+    }
+    .send-to-line {
+        font-size: 0.7rem;
+    }
+}
+.loading, .error {
+    text-align: center;
+    padding: 15px;
+    border-radius: 16px;
+    margin: 15px 0;
+}
+.loading { background: #e6f7ec; color: #2b6e4e; }
+.error { background: #fee2e2; color: #b91c1c; }
+footer {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.65rem;
+    color: #6c86a3;
+}
