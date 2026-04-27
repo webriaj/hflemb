@@ -90,82 +90,103 @@
         return { factories, components };
     }
 
-    // Build a single Gate Pass copy
     function buildSingleCopyHTML(groups, allSizes, selectedTimesList) {
-        if (!groups.length) return '<div class="error">No data</div>';
-        const { factories, components } = getFactoryAndComponentString(groups);
-        const today = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
-        
-        let html = `
-            <div style="margin-bottom: 25px; page-break-inside: avoid;">
-                <div style="text-align:center; margin-bottom:6px;">
-                    <h2 style="margin:0; font-size:1.2rem;">HABITUS FASHION LTD</h2>
-                    <h3 style="margin:2px 0; font-size:1rem;">GATE PASS</h3>
-                    <div class="send-to-line">Send to: ${escapeHtml(factories)} | Component: ${escapeHtml(components || '—')}</div>
-                    <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.7rem;">
-                        <span><strong>Date:</strong> ${today}</span>
-                        <span><strong>Timestamps:</strong> ${selectedTimesList.join(", ")}</span>
-                    </div>
+    if (!groups.length) return '<div class="error">No data</div>';
+    const { factories, components } = getFactoryAndComponentString(groups);
+    const today = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+    
+    let html = `
+        <div style="margin-bottom: 25px; page-break-inside: avoid;">
+            <div style="text-align:center; margin-bottom:6px;">
+                <h2 style="margin:0; font-size:1.2rem;">HABITUS FASHION LTD</h2>
+                <h3 style="margin:2px 0; font-size:1rem;">GATE PASS</h3>
+                <div class="send-to-line">Send to: ${escapeHtml(factories)} | Component: ${escapeHtml(components || '—')}</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.7rem;">
+                    <span><strong>Date:</strong> ${today}</span>
+                    <span><strong>Timestamps:</strong> ${selectedTimesList.join(", ")}</span>
                 </div>
-                <div class="challan-wrapper">
-                    <table class="challan-table">
-                        <thead>
-                            <tr>
-                                <th rowspan="2">Buyer</th><th rowspan="2">Style</th><th rowspan="2">PO</th>
-                                <th rowspan="2">Color</th><th rowspan="2">Cut No</th><th rowspan="2">Remarks</th>
-                                ${allSizes.map(sz => `<th colspan="2" class="size-header-main">${escapeHtml(sz)}</th>`).join('')}
-                            </tr>
-                            <tr>
-                                ${allSizes.map(() => `<th>Bundle</th><th>Qty</th>`).join('')}
-                            </tr>
-                        </thead>
-                        <tbody>
-        `;
-        for (let g of groups) {
-            html += `<tr>`;
-            html += `<td class="merged-cell">${escapeHtml(g.buyer)}<\/td>`;
-            html += `<td class="merged-cell">${escapeHtml(g.style)}<\/td>`;
-            html += `<td class="merged-cell">${escapeHtml(g.po)}<\/td>`;
-            html += `<td class="merged-cell">${escapeHtml(g.color)}<\/td>`;
-            html += `<td class="merged-cell">${escapeHtml(g.cut)}<\/td>`;
-            // Editable remarks
-            html += `<td class="merged-cell"><input type="text" class="remarks-input" data-groupkey="${escapeHtml(g.factory)}|${escapeHtml(g.buyer)}|${escapeHtml(g.style)}|${escapeHtml(g.component)}" value="${escapeHtml(g.remarks)}" style="width:120px;"><\/td>`;
-            for (let sz of allSizes) {
-                const data = g.sizeMap.get(sz);
-                if (data) {
-                    html += `<td>${data.bundles}<\/td><td>${data.qty}<\/td>`;
-                } else {
-                    html += `<td>-<\/td><td>-<\/td>`;
-                }
-            }
-            html += `<\/tr>`;
-        }
-        // Total row
-        html += `<tr class="total-row"><td colspan="6" style="text-align:right; font-weight:700;">GRAND TOTAL<\/td>`;
+            </div>
+            <div class="challan-wrapper">
+                <table class="challan-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Buyer</th><th rowspan="2">Style</th><th rowspan="2">PO</th>
+                            <th rowspan="2">Color</th><th rowspan="2">Cut No</th><th rowspan="2">Remarks</th>
+                            ${allSizes.map(sz => `<th colspan="2" class="size-header-main">${escapeHtml(sz)}</th>`).join('')}
+                            <th colspan="2" class="size-header-main">Grand Total</th>
+                        </tr>
+                        <tr>
+                            ${allSizes.map(() => `<th>Bundle</th><th>Qty</th>`).join('')}
+                            <th>Bundle</th><th>Qty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    `;
+    for (let g of groups) {
+        // Calculate row totals
+        let rowTotalBundles = 0, rowTotalQty = 0;
         for (let sz of allSizes) {
-            let totalBundles = 0, totalQty = 0;
-            for (let g of groups) {
-                const d = g.sizeMap.get(sz);
-                if (d) {
-                    totalBundles += d.bundles;
-                    totalQty += d.qty;
-                }
+            const d = g.sizeMap.get(sz);
+            if (d) {
+                rowTotalBundles += d.bundles;
+                rowTotalQty += d.qty;
             }
-            html += `<td style="font-weight:700;">${totalBundles}<\/td><td style="font-weight:700;">${totalQty}<\/td>`;
         }
+        html += `<tr>`;
+        html += `<td class="merged-cell">${escapeHtml(g.buyer)}<\/td>`;
+        html += `<td class="merged-cell">${escapeHtml(g.style)}<\/td>`;
+        html += `<td class="merged-cell">${escapeHtml(g.po)}<\/td>`;
+        html += `<td class="merged-cell">${escapeHtml(g.color)}<\/td>`;
+        html += `<td class="merged-cell">${escapeHtml(g.cut)}<\/td>`;
+        html += `<td class="merged-cell"><input type="text" class="remarks-input" data-groupkey="${escapeHtml(g.factory)}|${escapeHtml(g.buyer)}|${escapeHtml(g.style)}|${escapeHtml(g.component)}" value="${escapeHtml(g.remarks)}" style="width:120px;"><\/td>`;
+        for (let sz of allSizes) {
+            const data = g.sizeMap.get(sz);
+            if (data) {
+                html += `<td>${data.bundles}<\/td><td>${data.qty}<\/td>`;
+            } else {
+                html += `<td>-<\/td><td>-<\/td>`;
+            }
+        }
+        html += `<td style="font-weight:600;">${rowTotalBundles}<\/td><td style="font-weight:600;">${rowTotalQty}<\/td>`;
         html += `<\/tr>`;
-        html += `</tbody></table></div>`;
-        // Signature section
-        html += `<div class="signature-section">
-                    <div class="signature-line">_________________<br>Prepared by</div>
-                    <div class="signature-line">_________________<br>Cutting Incharge/Manager</div>
-                    <div class="signature-line">_________________<br>Store Officer</div>
-                    <div class="signature-line">_________________<br>Authorised Sign</div>
-                    <div class="signature-line">_________________<br>Print/Emb Receiver</div>
-                    <div class="signature-line">_________________<br>Security Dept</div>
-                </div>`;
-        return html;
     }
+    // Footer row
+    html += `<tr class="total-row"><td colspan="6" style="text-align:right; font-weight:700;">GRAND TOTAL<\/td>`;
+    for (let sz of allSizes) {
+        let totalBundles = 0, totalQty = 0;
+        for (let g of groups) {
+            const d = g.sizeMap.get(sz);
+            if (d) {
+                totalBundles += d.bundles;
+                totalQty += d.qty;
+            }
+        }
+        html += `<td style="font-weight:700;">${totalBundles}<\/td><td style="font-weight:700;">${totalQty}<\/td>`;
+    }
+    // Grand total of the Grand Total column
+    let finalGrandBundles = 0, finalGrandQty = 0;
+    for (let g of groups) {
+        for (let sz of allSizes) {
+            const d = g.sizeMap.get(sz);
+            if (d) {
+                finalGrandBundles += d.bundles;
+                finalGrandQty += d.qty;
+            }
+        }
+    }
+    html += `<td style="font-weight:700;">${finalGrandBundles}<\/td><td style="font-weight:700;">${finalGrandQty}<\/td>`;
+    html += `<\/tr>`;
+    html += `</tbody></table></div>`;
+    html += `<div class="signature-section">
+                <div class="signature-line">_________________<br>Prepared by</div>
+                <div class="signature-line">_________________<br>Cutting Incharge/Manager</div>
+                <div class="signature-line">_________________<br>Store Officer</div>
+                <div class="signature-line">_________________<br>Authorised Sign</div>
+                <div class="signature-line">_________________<br>Print/Emb Receiver</div>
+                <div class="signature-line">_________________<br>Security Dept</div>
+            </div>`;
+    return html;
+}
 
     function renderDualChallan() {
         const container = document.getElementById("dualChallanContainer");
