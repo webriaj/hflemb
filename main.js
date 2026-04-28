@@ -90,7 +90,7 @@
         return { factories, components };
     }
 
-    function buildSingleCopyHTML(groups, allSizes, selectedTimesList) {
+    function buildSingleCopyHTML(groups, allSizes, selectedTimesList,challanNumber) {
     if (!groups.length) return '<div class="error">No data</div>';
     const { factories, components } = getFactoryAndComponentString(groups);
     const today = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
@@ -103,6 +103,7 @@
                 <div class="send-to-line">Send to: ${escapeHtml(factories)} | Component: ${escapeHtml(components || '—')}</div>
                 <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.7rem;">
                     <span><strong>Date:</strong> ${today}</span>
+                    <span><strong>Challan No.:</strong> ${escapeHtml(challanNumber)}</span>
                     <span><strong>Timestamps:</strong> ${selectedTimesList.join(", ")}</span>
                 </div>
             </div>
@@ -188,14 +189,14 @@
     return html;
 }
 
-    function renderDualChallan() {
+    function renderDualChallan(challanNumber) {
         const container = document.getElementById("dualChallanContainer");
         if (!currentGroups.length) {
             container.style.display = "none";
             return;
         }
-        const copy1 = buildSingleCopyHTML(currentGroups, currentAllSizes, currentSelectedList);
-        const copy2 = buildSingleCopyHTML(currentGroups, currentAllSizes, currentSelectedList);
+        const copy1 = buildSingleCopyHTML(currentGroups, currentAllSizes, currentSelectedList, challanNumber);
+        const copy2 = buildSingleCopyHTML(currentGroups, currentAllSizes, currentSelectedList, challanNumber);
         const separator = `<div class="copy-separator"></div>`;
         container.innerHTML = copy1 + separator + copy2;
         container.style.display = "block";
@@ -266,7 +267,8 @@
         currentGroups = groups;
         currentAllSizes = allSizes;
         currentSelectedList = Array.from(selectedTimesSet).sort();
-        renderDualChallan();
+        const challanNumber = getChallanNumber(currentSelectedList);
+        renderDualChallan(challanNumber);
         document.getElementById("printBtn").style.display = "inline-block";
         document.getElementById("infoMsg").innerHTML = `✅ ${filteredRows.length} records → ${groups.length} groups. Sizes: ${allSizes.join(", ")}. Component at top.`;
     }
@@ -452,4 +454,20 @@
     });
     printBtn.addEventListener("click", printChallan);
     if (selectAllBtn) selectAllBtn.addEventListener("click", selectAllTimes);
-    if (deselectAllBtn) deselectAllBtn.addEventListener("click", deselectAllTimes);C
+    if (deselectAllBtn) deselectAllBtn.addEventListener("click", deselectAllTimes);
+
+// Generate challan number: ddmmyy + concatenated hhmm from selected timestamps
+function getChallanNumber(selectedTimesList) {
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = String(now.getFullYear()).slice(2);
+    const datePart = day + month + year; // ddmmyy
+
+    const timeParts = selectedTimesList.map(time => {
+        const [hour, minute] = time.split(':');
+        return hour.padStart(2, '0') + minute.padStart(2, '0');
+    }).join('');
+
+    return datePart + timeParts;
+}
