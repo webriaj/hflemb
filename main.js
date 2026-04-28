@@ -99,7 +99,7 @@
         <div style="margin-bottom: 25px; page-break-inside: avoid;">
             <div style="text-align:center; margin-bottom:6px;">
                 <h2 style="margin:0; font-size:1.2rem;">HABITUS FASHION LTD</h2>
-                <h3 style="margin:2px 0; font-size:1rem;">GATE PASS</h3>
+                <h3 style="margin:2px 0; font-size:1rem;">GATE PASS/Challan</h3>
                 <div class="send-to-line">Send to: ${escapeHtml(factories)} | Component: ${escapeHtml(components || '—')}</div>
                 <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.7rem;">
                     <span><strong>Date:</strong> ${today}</span>
